@@ -1,0 +1,457 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800");
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #dce1e5;
+  font-family: "Montserrat", helvetica, arial, sans-serif;
+  font-size: 14px;
+  color: #cfd6e1;
+  line-height: 1.5;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+* {
+  transition: .4s;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: 0;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: 0;
+}
+
+.movie-search {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  min-height: 40px;
+  display: flex;
+  margin: 8vh auto;
+  border-radius: 8px;
+  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.movie-search input {
+  padding-left: 18px;
+  width: 80%;
+  border: none;
+  display: block;
+  border-radius: 8px 0 0 8px;
+}
+
+.movie-search button {
+  background: #f0f0f0;
+  width: 20%;
+  border: none;
+  display: block;
+  border-radius: 0 8px 8px 0;
+  -moz-transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -o-transition: 0.5s all;
+  transition: 0.5s all;
+}
+
+.movie-search button:hover {
+  color: #efefef;
+  animation: changeColorUp .2s;
+  transition: all 0.2s ease-in;
+  background: linear-gradient(90deg, #ffe2a7 0%, #da9311 100%);
+  /* background-color: #212120; */
+}
+
+.movie-search button:not(:hover) {
+  transition: all 0.2s ease-in;
+  background: #f0f0f0;
+}
+
+
+.movie-more {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  min-height: 40px;
+  display: flex;
+  margin: 8vh auto;
+  border-radius: 8px;
+  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.movie-more button {
+  background: #fff;
+  width: 100%;
+  border: none;
+  display: block;
+  border-radius: 8px;
+  -moz-transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -o-transition: 0.5s all;
+  transition: 0.5s all;
+}
+
+.movie-more button:hover {
+  background: #f0f0f0;
+  transition: all 0.2s ease-in;
+}
+
+
+
+
+
+.movie-card {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  min-height: 370px;
+  display: block;
+  margin: 8vh auto;
+  border-radius: 8px;
+  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+
+.movie-card__overlay {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(to right, rgba(42, 159, 255, 0.2) 0%, #212120 60%, #212120 100%);
+  background-blend-mode: multiply;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+
+.movie-card__share {
+  padding: 0.5em;
+  display: inline-block;
+  width: 100%;
+  max-width: 130px;
+}
+
+
+.movie-card__likes {
+  font-size: 1.2em;
+  color: #ffffff;
+  mix-blend-mode: lighten;
+  opacity: .4;
+  background: none;
+}
+
+.movie-card__likes:hover {
+  opacity: 1;
+  mix-blend-mode: lighten;
+}
+
+.movie-card__likes:not(:first-of-type) {
+  margin-left: 5px;
+}
+
+
+.movie-card__content {
+  width: 100%;
+  max-width: 370px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+  float: right;
+  padding-right: 1em;
+  padding-bottom: 1em;
+}
+
+.movie-card__header {
+  margin-bottom: 2em;
+}
+
+.movie-card__title {
+  color: #ffffff;
+  margin-bottom: .25em;
+  opacity: .75;
+}
+
+.movie-card__info {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: .8em;
+  color: #2a9fff;
+  line-height: 1;
+  margin: 0;
+  font-weight: 700;
+  opacity: .5;
+}
+
+.movie-card__desc {
+  font-weight: 300;
+  opacity: .84;
+  margin-bottom: 2em;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Montserrat", helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.btn {
+  padding: .5rem 2rem;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 3px solid #ffffff;
+}
+
+.btn::before {
+  font-family: 'Material Icons';
+  content: '\e037';
+  vertical-align: middle;
+  font-size: 1.5em;
+  padding-right: .5em;
+}
+
+.btn-outline:hover {
+  border-color: #2a9fff;
+  color: #2a9fff;
+  box-shadow: 0px 1px 8px 0px rgba(245, 199, 0, 0.2);
+}
+
+
+
+
+
+
+
+
+
+
+@keyframes changeColorUp {
+  0% {
+    background: linear-gradient(90deg, #fdfdfd 0%, #face8d 100%);
+  }
+
+  10% {
+    background: linear-gradient(90deg, #fcf6ea 0%, #fdcc82 100%);
+  }
+
+  20% {
+    background: linear-gradient(90deg, #faf1df 0%, #fac370 100%);
+  }
+
+  30% {
+    background: linear-gradient(90deg, #fff3db 0%, #f5ba62 100%);
+  }
+
+  40% {
+    background: linear-gradient(90deg, #fff1d4 0%, #f5b657 100%);
+  }
+
+  50% {
+    background: linear-gradient(90deg, #fcebc9 0%, #eeab48 100%);
+  }
+
+  60% {
+    background: linear-gradient(90deg, #ffecc5 0%, #eba43b 100%);
+  }
+
+  70% {
+    background: linear-gradient(90deg, #fde9bf 0%, #e99f30 100%);
+  }
+
+  80% {
+    background: linear-gradient(90deg, #ffe7b5 0%, #e49622 100%);
+  }
+
+  90% {
+    background: linear-gradient(90deg, #fce2ac 0%, #e29a13 100%);
+  }
+
+  100% {
+    background: linear-gradient(90deg, #ffe2a7 0%, #da9311 100%);
+  }
+}
+
+@-webkit-keyframes changeColorUp {
+  0% {
+    background: linear-gradient(90deg, #fdfdfd 0%, #face8d 100%);
+  }
+
+  10% {
+    background: linear-gradient(90deg, #fcf6ea 0%, #fdcc82 100%);
+  }
+
+  20% {
+    background: linear-gradient(90deg, #faf1df 0%, #fac370 100%);
+  }
+
+  30% {
+    background: linear-gradient(90deg, #fff3db 0%, #f5ba62 100%);
+  }
+
+  40% {
+    background: linear-gradient(90deg, #fff1d4 0%, #f5b657 100%);
+  }
+
+  50% {
+    background: linear-gradient(90deg, #fcebc9 0%, #eeab48 100%);
+  }
+
+  60% {
+    background: linear-gradient(90deg, #ffecc5 0%, #eba43b 100%);
+  }
+
+  70% {
+    background: linear-gradient(90deg, #fde9bf 0%, #e99f30 100%);
+  }
+
+  80% {
+    background: linear-gradient(90deg, #ffe7b5 0%, #e49622 100%);
+  }
+
+  90% {
+    background: linear-gradient(90deg, #fce2ac 0%, #e29a13 100%);
+  }
+
+  100% {
+    background: linear-gradient(90deg, #ffe2a7 0%, #da9311 100%);
+  }
+}
+
+@keyframes changeColorDown {
+  100% {
+    background: linear-gradient(90deg, #ffe2a7 0%, #da9311 100%);
+  }
+
+  90% {
+    background: linear-gradient(90deg, #fce2ac 0%, #e29a13 100%);
+  }
+
+  80% {
+    background: linear-gradient(90deg, #ffe7b5 0%, #e49622 100%);
+  }
+
+  70% {
+    background: linear-gradient(90deg, #fde9bf 0%, #e99f30 100%);
+  }
+
+  60% {
+    background: linear-gradient(90deg, #ffecc5 0%, #eba43b 100%);
+  }
+
+  50% {
+    background: linear-gradient(90deg, #fcebc9 0%, #eeab48 100%);
+  }
+
+  40% {
+    background: linear-gradient(90deg, #fff1d4 0%, #f5b657 100%);
+  }
+
+  30% {
+    background: linear-gradient(90deg, #fff3db 0%, #f5ba62 100%);
+  }
+
+  20% {
+    background: linear-gradient(90deg, #faf1df 0%, #fac370 100%);
+  }
+
+  10% {
+    background: linear-gradient(90deg, #fcf6ea 0%, #fdcc82 100%);
+  }
+
+  0% {
+    background: linear-gradient(90deg, #fdfdfd 0%, #face8d 100%);
+  }
+}
+
+@-webkit-keyframes changeColorDown {
+  100% {
+    background: linear-gradient(90deg, #ffe2a7 0%, #da9311 100%);
+  }
+
+  90% {
+    background: linear-gradient(90deg, #fce2ac 0%, #e29a13 100%);
+  }
+
+  80% {
+    background: linear-gradient(90deg, #ffe7b5 0%, #e49622 100%);
+  }
+
+  70% {
+    background: linear-gradient(90deg, #fde9bf 0%, #e99f30 100%);
+  }
+
+  60% {
+    background: linear-gradient(90deg, #ffecc5 0%, #eba43b 100%);
+  }
+
+  50% {
+    background: linear-gradient(90deg, #fcebc9 0%, #eeab48 100%);
+  }
+
+  40% {
+    background: linear-gradient(90deg, #fff1d4 0%, #f5b657 100%);
+  }
+
+  30% {
+    background: linear-gradient(90deg, #fff3db 0%, #f5ba62 100%);
+  }
+
+  20% {
+    background: linear-gradient(90deg, #faf1df 0%, #fac370 100%);
+  }
+
+  10% {
+    background: linear-gradient(90deg, #fcf6ea 0%, #fdcc82 100%);
+  }
+
+  0% {
+    background: linear-gradient(90deg, #fdfdfd 0%, #face8d 100%);
+  }
+}
