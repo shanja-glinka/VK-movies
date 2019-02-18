@@ -9,17 +9,17 @@ const cmd = function (c) {
 
 
 
-var addMovieBlock = function (id ,image, likes, title, info, desc, srcWatch) {
+var addMovieBlock = function (id, image, likes, title, info, desc, srcWatch) {
   cmd("add div{id: movie-card-" + id + "} style{class: movie-card; background-image: url(\"" + image + "\")} parent{byId: movie-card-list}");
-    cmd("add div{id: movie-card__overlay-" + id + "} style{class: movie-card__overlay} parent{byId: movie-card-" + id + "}");
-    cmd("add div{id: movie-card__share-" + id + "} style{class: movie-card__share} parent{byId: movie-card-" + id + "}");
-      cmd("add button{id: movie-card__button-likes-" + id + "} style{class: movie-card__likes} parent{byId: movie-card__share-" + id + "} text{" + likes + "}");
-    cmd("add div{id: movie-card__content-" + id + "} style{class: movie-card__content} parent{byId: movie-card-" + id + "}");
-      cmd("add div{id: movie-card__header-" + id + "} style{class: movie-card__header} parent{byId: movie-card__content-" + id + "}");
-        cmd("add h1 style{class: movie-card__title} parent{byId: movie-card__header-" + id + "} text{" + title + "}");
-        cmd("add h4 style{class: movie-card__info} parent{byId: movie-card__header-" + id + "} text{" + info + "}");
-      cmd("add p{id: movie-card__header-" + id + "} style{class: movie-card__desc} parent{byId: movie-card__content-" + id + "} text{" + desc + "}");
-      cmd("add button{id: movie-card__header-" + id + ", type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Watch} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
+  cmd("add div{id: movie-card__overlay-" + id + "} style{class: movie-card__overlay} parent{byId: movie-card-" + id + "}");
+  cmd("add div{id: movie-card__share-" + id + "} style{class: movie-card__share} parent{byId: movie-card-" + id + "}");
+  cmd("add button{id: movie-card__button-likes-" + id + "} style{class: movie-card__likes} parent{byId: movie-card__share-" + id + "} text{" + likes + "}");
+  cmd("add div{id: movie-card__content-" + id + "} style{class: movie-card__content} parent{byId: movie-card-" + id + "}");
+  cmd("add div{id: movie-card__header-" + id + "} style{class: movie-card__header} parent{byId: movie-card__content-" + id + "}");
+  cmd("add h1 style{class: movie-card__title} parent{byId: movie-card__header-" + id + "} text{" + title + "}");
+  cmd("add h4 style{class: movie-card__info} parent{byId: movie-card__header-" + id + "} text{" + info + "}");
+  cmd("add p{id: movie-card__header-" + id + "} style{class: movie-card__desc} parent{byId: movie-card__content-" + id + "} text{" + desc + "}");
+  cmd("add button{id: movie-card__header-" + id + ", type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Watch} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
 }
 
 
@@ -41,6 +41,7 @@ var ajaxRequest = function (object) {
       console.log(b, a, c);
     },
     error: object.error || function (a, b, c) {
+      alert("Error: datas cannot be loaded");
       console.log("error", b, c);
     }
   });
@@ -57,10 +58,8 @@ var vkAPIResponse = function (responseData) {
   createContent(responseData);
 };
 
-var parseJSON = function (jsonObj, condition, count) {
+var parseResponse = function (jsonObj, condition) {
   jsonObj = jsonObj.response.items;
-
-  count = count || -1;
 
   var f1 = (v, s) => {
     v = v.split(s);
@@ -90,34 +89,33 @@ var parseJSON = function (jsonObj, condition, count) {
       }
     }
 
-    if (c.length > 0) {
+    if (c.length > 0 && c.toLowerCase() !== "случайно") {
       for (let i = 0; i < v.length; i++) {
-        if (v[i] === c) {
-          v.join(", ");
-          return v;
+        if (v[i].toLowerCase() === c.toLowerCase()) {
+          return v.join(", ");
         }
       }
-    } else return v;
+    } else return v.join(", ");
 
     return "";
   };
 
+  var arrRet = [];
 
-  var obj = {
-    length: 0,
-    images: [],
-    likes: [],
-    titles: [],
-    info: [],
-    descript: [],
-    src: []
-  }
 
 
   for (var i = 0; i < jsonObj.length; i++) {
     try {
       let tag, img, like, title, info, desc, src;
       let r = jsonObj[i];
+      let obj = {
+        images: "",
+        likes: "",
+        titles: "",
+        info: "",
+        descript: "",
+        src: ""
+      }
 
       if (r.text.indexOf("Страна:") > 0 && r.text.indexOf("Жанр:") > 0 && r.text.indexOf("Рейтинги:") > 0) {
         let textArr = f1(r.text, "\n");
@@ -137,17 +135,14 @@ var parseJSON = function (jsonObj, condition, count) {
         src = "https://vk.com/public26750264?w=wall" + r.owner_id + "_" + r.id;
 
 
-        obj.length++;
-        obj.images.push(img);
-        obj.likes.push(like);
-        obj.titles.push(title);
-        obj.info.push(info);
-        obj.descript.push(desc);
-        obj.src.push(src);
+        obj.images = img;
+        obj.likes = like;
+        obj.titles = title;
+        obj.info = info;
+        obj.descript = desc;
+        obj.src = src;
 
-
-        count--;
-        if (count == 0) return obj;
+        arrRet.push(obj);
       }
 
     } catch {
@@ -155,71 +150,113 @@ var parseJSON = function (jsonObj, condition, count) {
     }
   }
 
-  return obj;
+
+
+
+  return arrRet;
 };
 
 
-function getVKMovies() {
+
+var tagID;
+
+function getVKMovies(e) {
+  tagID = e;
   ajaxRequest({
-    url: prepareUrl("wall.get", "-26750264", 40),
+    url: prepareUrl("wall.get", "-26750264", 100),
     method: "GET",
     success: vkAPIResponse
   });
 }
 
 
-var parsedContent = {}
+var parsedContent = []
 var parsedContentIt = 0;
 
 function createContent(vkResponse) {
-  parsedContent = parseJSON(vkResponse, cmd("get in{byId: movie-search-input}").value);
+  var sRand = (a, b) => {
+    return Math.random() - 0.5;
+  };
+
+  parsedContent = [];
+  parsedContent = parseResponse(vkResponse, tagID.innerHTML);
+
+
+  console.log(parsedContent.length);
+  parsedContentIt = 0;
+  parsedContent.sort(sRand);
+
   cmd("del in{Byid: movie-card-list} *");
+
   if (!isNull(document.getElementById("movie-card-more")))
     cmd("del in{Byid: movie-card-more} *");
+  cmd("add div{id: movie-card-list} parent{byTag: body 0}");
 
-    cmd("add div{id: movie-card-list} parent{byTag: body 0}");
-  cmd("add div{id: movie-search} style{class: movie-search} parent{byId: movie-card-list}");
-  cmd("add input{id: movie-search-input, type:text, value:, placeholder:find your monvie} parent{byId: movie-search}");
-  cmd("add button parent{byId: movie-search} text{Find} event{click: getVKMovies()}");
+  finderHtml();
+
 
   for (let i = 0; i < parsedContent.length; i++, parsedContentIt++) {
     if (parsedContentIt === 15) break;
     addMovieBlock(
       i,
-      parsedContent.images[i],
-      parsedContent.likes[i],
-      parsedContent.titles[i],
-      parsedContent.info[i],
-      parsedContent.descript[i],
-      parsedContent.src[i]
+      parsedContent[i].images,
+      parsedContent[i].likes,
+      parsedContent[i].titles,
+      parsedContent[i].info,
+      parsedContent[i].descript,
+      parsedContent[i].src
     );
   }
-  cmd("add div{id: movie-card-more} parent{byTag: body 0}");
-  cmd("add div{id: movie-more} style{class: movie-more} parent{byId: movie-card-more}");
-  cmd("add button parent{byId: movie-more} text{More} event{click: moreMovies()}");
+
+  if (parsedContent.length > 15) {
+    cmd("add div{id: movie-card-more} parent{byTag: body 0}");
+    cmd("add div{id: movie-more} style{class: movie-more} parent{byId: movie-card-more}");
+    cmd("add button parent{byId: movie-more} text{More} event{click: moreMovies()}");
+  }
 }
 
 function moreMovies() {
   let max = parsedContentIt + 15;
-  if (max >= parsedContentIt)
-  cmd("del in{Byid: movie-card-more} *");
+  
+  if (max >= parsedContent.length)
+    cmd("del in{Byid: movie-card-more} *");
 
   for (let i = parsedContentIt; i < parsedContent.length; i++, parsedContentIt++) {
     if (parsedContentIt == max) break;
     addMovieBlock(
       i,
-      parsedContent.images[i],
-      parsedContent.likes[i],
-      parsedContent.titles[i],
-      parsedContent.info[i],
-      parsedContent.descript[i],
-      parsedContent.src[i]
+      parsedContent[i].images,
+      parsedContent[i].likes,
+      parsedContent[i].titles,
+      parsedContent[i].info,
+      parsedContent[i].descript,
+      parsedContent[i].src
     );
   }
+  console.log(parsedContent.length, parsedContentIt, max);
 }
 
 
-cmd("add div{id: movie-card-list} parent{byTag: body 0}");
+function finderHtml() {
+  cmd("add div{id: movie-card-list} parent{byTag: body 0}");
   cmd("add div{id: movie-search} style{class: movie-search} parent{byId: movie-card-list}");
-    cmd("add input{id: movie-search-input, type:text, value:, placeholder:find your monvie} parent{byId: movie-search}");
-    cmd("add button parent{byId: movie-search} text{Find} event{click: getVKMovies()}");
+  cmd("add div{id: movie-search-div-0} style{class: movie-search-row} parent{byId: movie-card-list}");
+  cmd("add button parent{byId: movie-search-div-0} text{Случайно} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-0} text{Драма} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-0} text{Фэнтези} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-0} text{Документальный} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-0} text{Криминал} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-0} text{Биография} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-0} text{Военный} event{click: getVKMovies(this)}");
+  cmd("add div{id: movie-search-div-1} style{class: movie-search-row} parent{byId: movie-card-list}");
+  cmd("add button parent{byId: movie-search-div-1} text{Боевик} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-1} text{Триллер} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-1} text{Приключения} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-1} text{Мелодрама} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-1} text{Комедия} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-1} text{Семейный} event{click: getVKMovies(this)}");
+  cmd("add button parent{byId: movie-search-div-1} text{Фантастика} event{click: getVKMovies(this)}");
+
+}
+
+finderHtml();

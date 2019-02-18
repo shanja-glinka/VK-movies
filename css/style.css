@@ -54,38 +54,37 @@ button:focus {
 .movie-search {
   background-size: contain;
   background-repeat: no-repeat;
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.movie-search-row {
+  justify-content: center;
+  display: flex;
   width: 100%;
   max-width: 800px;
-  height: 100%;
-  min-height: 40px;
-  display: flex;
-  margin: 8vh auto;
-  border-radius: 8px;
-  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
-
+  height: auto;
+  margin: 2vh auto;
 }
 
-.movie-search input {
-  padding-left: 18px;
-  width: 80%;
-  border: none;
-  display: block;
-  border-radius: 8px 0 0 8px;
-}
-
-.movie-search button {
+.movie-search-row button {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
   background: #f0f0f0;
-  width: 20%;
   border: none;
+  height: 40px;
   display: block;
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   -moz-transition: 0.5s all;
   -webkit-transition: 0.5s all;
   -o-transition: 0.5s all;
   transition: 0.5s all;
+  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
 }
 
-.movie-search button:hover {
+.movie-search-row button:hover {
   color: #efefef;
   animation: changeColorUp .2s;
   transition: all 0.2s ease-in;
@@ -93,7 +92,7 @@ button:focus {
   /* background-color: #212120; */
 }
 
-.movie-search button:not(:hover) {
+.movie-search-row button:not(:hover) {
   transition: all 0.2s ease-in;
   background: #f0f0f0;
 }

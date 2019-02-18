@@ -68,7 +68,7 @@ const t_command_com = ["add", "del", "change", "server", "func", "load"];
 const t_command_events = ["click", "mouseDown", "blur", "focus", "change", "dblclick", "keydown", "keypress", "keyup", "load", "mouseover"];
 const t_command_tags = ["p", "body", "div", "span", "main", "button", "br", "input", "form", "img", "li", "ul", "table", "section", "label",
   "td", "th", "title", "a", "header", "footer", "canvas", "svg", "defs", "filter", "feGaussianBlur", "feColorMatrix", "option",
-  "feColorMatrix", "feOffset", "feComposite", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "script", "select", "small" ,"i"
+  "feColorMatrix", "feOffset", "feComposite", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "script", "select", "small" ,"i", "datalist"
 ];
 const t_command_param = ["type", "src", "image", "name", "id", "text", "value"];
 const t_command_params = ["style", "parent", "text", "in"];
