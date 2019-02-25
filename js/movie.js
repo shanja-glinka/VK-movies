@@ -19,7 +19,7 @@ var addMovieBlock = function (id, image, likes, title, info, desc, srcWatch) {
   cmd("add h1 style{class: movie-card__title} parent{byId: movie-card__header-" + id + "} text{" + title + "}");
   cmd("add h4 style{class: movie-card__info} parent{byId: movie-card__header-" + id + "} text{" + info + "}");
   cmd("add p{id: movie-card__header-" + id + "} style{class: movie-card__desc} parent{byId: movie-card__content-" + id + "} text{" + desc + "}");
-  cmd("add button{id: movie-card__header-" + id + ", type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Watch} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
+  cmd("add button{id: movie-card__header-" + id + ", type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Смотреть} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
 }
 
 
