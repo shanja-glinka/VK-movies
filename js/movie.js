@@ -166,15 +166,16 @@ function setTagSelected(e) {
   } else {
     if (e.innerHTML.toLowerCase() !== "случайно") {
       document.getElementById("generated-id-0").classList = "";
-      tags.push(e.innerHTML.toLowerCase())
+      tags.push(e.innerHTML.toLowerCase());
+      document.getElementById(e.id).classList = "button-active";
     } else {
       let elem = document.getElementsByClassName("button-active");
-      for (let i = 0; i < elem.length; i++) {
+      for (let i = elem.length - 1; i > -1; i--) {
+        console.log(elem[i]);
         elem[i].classList = "";
       }
       tags = [];
     }
-    document.getElementById(e.id).classList = "button-active";
   }
   if (tags.length === 0) {
     document.getElementById("generated-id-0").classList = "button-active";
