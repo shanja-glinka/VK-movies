@@ -51,14 +51,6 @@ button:focus {
   outline: 0;
 }
 
-.movie-search {
-  background-size: contain;
-  background-repeat: no-repeat;
-  height: auto;
-  display: flex;
-  justify-content: center;
-}
-
 .movie-search-row {
   justify-content: center;
   display: flex;
@@ -95,6 +87,11 @@ button:focus {
 .movie-search-row button:not(:hover) {
   transition: all 0.2s ease-in;
   background: #f0f0f0;
+}
+
+.button-active {
+  color: #efefef;
+  background: linear-gradient(90deg, #ffe2a7 0%, #da9311 100%) !important;
 }
 
 

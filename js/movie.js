@@ -1,6 +1,6 @@
 //oauth.vk.com/authorize?client_id=6861903&scope=photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,email,notifications,stats,ads,offline,docs,pages,stats,notifications&response_type=token
-"https://api.vk.com/method/wall.get?owner_id=-26750264&count=15&access_token=20a2b475f12e4c76779e48fbccc497e7826124077282709cd32bd968ec79c4d0e22655fbf27b9eba30653&v=5.52"
-"https://api.vk.com/method/wall.get?owner_id=-26750264&count=20&access_token=27d6b6701f6d72a7e1c0b3bdf523f025fbf994cd6a3ffe1c9bf12e9424fd18b76deb390c85b07869af0bd&v=5.52"
+//"https://api.vk.com/method/wall.get?owner_id=-26750264&count=15&access_token=20a2b475f12e4c76779e48fbccc497e7826124077282709cd32bd968ec79c4d0e22655fbf27b9eba30653&v=5.52"
+//"https://api.vk.com/method/wall.get?owner_id=-26750264&count=20&access_token=27d6b6701f6d72a7e1c0b3bdf523f025fbf994cd6a3ffe1c9bf12e9424fd18b76deb390c85b07869af0bd&v=5.52"
 
 const COMANDLINE_JS = new t_command;
 const cmd = function (c) {
@@ -18,8 +18,8 @@ var addMovieBlock = function (id, image, likes, title, info, desc, srcWatch) {
   cmd("add div{id: movie-card__header-" + id + "} style{class: movie-card__header} parent{byId: movie-card__content-" + id + "}");
   cmd("add h1 style{class: movie-card__title} parent{byId: movie-card__header-" + id + "} text{" + title + "}");
   cmd("add h4 style{class: movie-card__info} parent{byId: movie-card__header-" + id + "} text{" + info + "}");
-  cmd("add p{id: movie-card__header-" + id + "} style{class: movie-card__desc} parent{byId: movie-card__content-" + id + "} text{" + desc + "}");
-  cmd("add button{id: movie-card__header-" + id + ", type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Смотреть} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
+  cmd("add p style{class: movie-card__desc} parent{byId: movie-card__content-" + id + "} text{" + desc + "}");
+  cmd("add button{type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Смотреть} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
 }
 
 
@@ -89,9 +89,13 @@ var parseResponse = function (jsonObj, condition) {
       }
     }
 
-    if (c.length > 0 && c.toLowerCase() !== "случайно") {
+    if (c && c.constructor === Array && c.length > 0) {
+      let trigLength = c.length;
       for (let i = 0; i < v.length; i++) {
-        if (v[i].toLowerCase() === c.toLowerCase()) {
+        if (c.indexOf(v[i].toLowerCase()) > -1) {
+          trigLength--;
+        }
+        if (trigLength == 0) {
           return v.join(", ");
         }
       }
@@ -101,8 +105,6 @@ var parseResponse = function (jsonObj, condition) {
   };
 
   var arrRet = [];
-
-
 
   for (var i = 0; i < jsonObj.length; i++) {
     try {
@@ -150,18 +152,38 @@ var parseResponse = function (jsonObj, condition) {
     }
   }
 
-
-
-
   return arrRet;
 };
 
 
 
-var tagID;
+var tags = [];
+
+function setTagSelected(e) {
+  if (tags.indexOf(e.innerHTML.toLowerCase()) > -1) {
+    tags.splice(tags.indexOf(e.innerHTML.toLowerCase()), 1);
+    document.getElementById(e.id).classList = "";
+  } else {
+    if (e.innerHTML.toLowerCase() !== "случайно") {
+      document.getElementById("generated-id-0").classList = "";
+      tags.push(e.innerHTML.toLowerCase())
+    } else {
+      let elem = document.getElementsByClassName("button-active");
+      for (let i = 0; i < elem.length; i++) {
+        elem[i].classList = "";
+      }
+      tags = [];
+    }
+    document.getElementById(e.id).classList = "button-active";
+  }
+  if (tags.length === 0) {
+    document.getElementById("generated-id-0").classList = "button-active";
+  }
+}
+
 
 function getVKMovies(e) {
-  tagID = e;
+  setTagSelected(e);
   ajaxRequest({
     url: prepareUrl("wall.get", "-26750264", 100),
     method: "GET",
@@ -179,21 +201,12 @@ function createContent(vkResponse) {
   };
 
   parsedContent = [];
-  parsedContent = parseResponse(vkResponse, tagID.innerHTML);
-
-
-  console.log(parsedContent.length);
-  parsedContentIt = 0;
+  parsedContent = parseResponse(vkResponse, tags);
   parsedContent.sort(sRand);
+  parsedContentIt = 0;
 
-  cmd("del in{Byid: movie-card-list} *");
 
-  if (!isNull(document.getElementById("movie-card-more")))
-    cmd("del in{Byid: movie-card-more} *");
-  cmd("add div{id: movie-card-list} parent{byTag: body 0}");
-
-  finderHtml();
-
+  reloadContent();
 
   for (let i = 0; i < parsedContent.length; i++, parsedContentIt++) {
     if (parsedContentIt === 15) break;
@@ -217,7 +230,6 @@ function createContent(vkResponse) {
 
 function moreMovies() {
   let max = parsedContentIt + 15;
-  
   if (max >= parsedContent.length)
     cmd("del in{Byid: movie-card-more} *");
 
@@ -233,14 +245,19 @@ function moreMovies() {
       parsedContent[i].src
     );
   }
-  console.log(parsedContent.length, parsedContentIt, max);
 }
 
-
-function finderHtml() {
+function reloadContent() {
+  cmd("del in{Byid: movie-card-list} *");
+  if (!isNull(document.getElementById("movie-card-more"))) {
+    cmd("del in{Byid: movie-card-more} *");
+  }
   cmd("add div{id: movie-card-list} parent{byTag: body 0}");
-  cmd("add div{id: movie-search} style{class: movie-search} parent{byId: movie-card-list}");
-  cmd("add div{id: movie-search-div-0} style{class: movie-search-row} parent{byId: movie-card-list}");
+}
+
+function buttons() {
+  cmd("add div{id: movie-card-list-m1} parent{byTag: body 0}");
+  cmd("add div{id: movie-search-div-0} style{class: movie-search-row} parent{byId: movie-card-list-m1}");
   cmd("add button parent{byId: movie-search-div-0} text{Случайно} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-0} text{Драма} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-0} text{Фэнтези} event{click: getVKMovies(this)}");
@@ -248,7 +265,7 @@ function finderHtml() {
   cmd("add button parent{byId: movie-search-div-0} text{Криминал} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-0} text{Биография} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-0} text{Военный} event{click: getVKMovies(this)}");
-  cmd("add div{id: movie-search-div-1} style{class: movie-search-row} parent{byId: movie-card-list}");
+  cmd("add div{id: movie-search-div-1} style{class: movie-search-row} parent{byId: movie-card-list-m1}");
   cmd("add button parent{byId: movie-search-div-1} text{Боевик} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-1} text{Триллер} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-1} text{Приключения} event{click: getVKMovies(this)}");
@@ -256,7 +273,11 @@ function finderHtml() {
   cmd("add button parent{byId: movie-search-div-1} text{Комедия} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-1} text{Семейный} event{click: getVKMovies(this)}");
   cmd("add button parent{byId: movie-search-div-1} text{Фантастика} event{click: getVKMovies(this)}");
-
 }
 
-finderHtml();
+
+
+window.onload = function () {
+  cmd("add div{id: movie-card-list} parent{byTag: body 0}");
+  buttons();
+}

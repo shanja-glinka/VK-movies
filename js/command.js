@@ -1,25 +1,78 @@
-var test_FontsShow = function () {
-  command("add div{id: t-1} style{class: voice-recorder font-size-18} parrent{byTag:body[0]}");
-  command("add p style{class: font-horizon} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-horizon_lines} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-horizon} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-horizon_linestwo} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-horizon_outline clickable} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-horizon_outlinetwo clickable} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-enzyme font-weight-900} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-axon clickable} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-axon_light clickable} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-axon_bold clickable} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-axon_ultralight clickable} parrent{byId:t-1} text{Im pinas}");
-  command("add p style{class: font-corbel} parrent{byId:t-1} text{Im pinas}");
+/**
+ * Deletes spaces if > 1
+ * @param {string} value 
+ */
+function removeSpace(value) {
+  //value = value.replace(/\s+/g, "  ").trim();
+  value = value.split(/\s* \s*/);
+  var tm = [];
+  for (let i = 0; i < value.length; i++) {
+    if (value[i] !== " " && value[i] !== "") {
+      tm.push(value[i]);
+    }
+  }
+
+  return tm.join(" ");
+}
+/**
+ * Return direct children elements.
+ *
+ * @param {HTMLElement}
+ * @return {Array}
+ */
+function elementChildren(element) {
+  var childNodes = element.childNodes,
+    children = [],
+    i = childNodes.length;
+
+  while (i--) {
+    if (childNodes[i].nodeType == 1) {
+      children.unshift(childNodes[i]);
+    }
+  }
+
+  return children;
 }
 
-function test_SayHello() {
-  alert("its a test, hi");
+Object.prototype.isEmpty = function () {
+  for (var key in this) {
+    if (this.hasOwnProperty(key))
+      return false;
+  }
+  return true;
 }
 
 
+Object.size = function (obj) {
+  var size = 0,
+    key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
+};
 
+function toArray(obj) {
+  for (var i = 0, arr = []; i < obj.length; i++)
+    arr.push(obj[i]);
+  return arr;
+}
+
+function isEmptyObject(obj) {
+  if (isNull(obj))
+    return true;
+
+  for (var i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isNull(obj) {
+  return obj === null ? true : false;
+}
 
 class t_console_log {
 
@@ -68,7 +121,7 @@ const t_command_com = ["add", "del", "change", "server", "func", "load"];
 const t_command_events = ["click", "mouseDown", "blur", "focus", "change", "dblclick", "keydown", "keypress", "keyup", "load", "mouseover"];
 const t_command_tags = ["p", "body", "div", "span", "main", "button", "br", "input", "form", "img", "li", "ul", "table", "section", "label",
   "td", "th", "title", "a", "header", "footer", "canvas", "svg", "defs", "filter", "feGaussianBlur", "feColorMatrix", "option",
-  "feColorMatrix", "feOffset", "feComposite", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "script", "select", "small" ,"i", "datalist"
+  "feColorMatrix", "feOffset", "feComposite", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "script", "select", "small", "i", "datalist"
 ];
 const t_command_param = ["type", "src", "image", "name", "id", "text", "value"];
 const t_command_params = ["style", "parent", "text", "in"];
@@ -1253,9 +1306,15 @@ class t_command {
 
     var commands = this.splitCommand(bufLine);
 
+    
     if (bufLine === "") {
       this.log.throw("There are no parameters in " + line);
       return false;
+    }
+
+    if (bufLine === "count 0") {
+      //this.uniqueId = 0;
+      return true;
     }
 
     params = this.splitCommandParams(bufLine);
