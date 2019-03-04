@@ -19,7 +19,7 @@ var addMovieBlock = function (id, image, likes, title, info, desc, srcWatch) {
   cmd("add h1 style{class: movie-card__title} parent{byId: movie-card__header-" + id + "} text{" + title + "}");
   cmd("add h4 style{class: movie-card__info} parent{byId: movie-card__header-" + id + "} text{" + info + "}");
   cmd("add p style{class: movie-card__desc} parent{byId: movie-card__content-" + id + "} text{" + desc + "}");
-  cmd("add button{type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Смотреть} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}");
+  srcWatch.length > 0 ? cmd("add button{type: button} style{class: btn btn-outline movie-card__button} parent{byId: movie-card__content-" + id + "} text{Смотреть} event{click: {window.open(\"" + srcWatch + "\",\"_blank\");}}") : "";
 }
 
 
@@ -31,27 +31,19 @@ var prepareUrl = function (vkAPImethod, id, count) {
 };
 
 var ajaxRequest = function (object) {
-  console.log(object);
   $.ajax({
     method: object.method || "GET",
     url: object.url,
 
     dataType: object.type || "jsonp",
-    success: object.success || function (a, b, c) {
-      console.log(b, a, c);
-    },
-    error: object.error || function (a, b, c) {
-      alert("Error: datas cannot be loaded");
-      console.log("error", b, c);
-    }
+    success: object.success || function (a, b, c) {},
+    error: object.error || function (a, b, c) { }
   });
 };
 
 var vkAPIResponse = function (responseData) {
-  console.log(responseData);
   let err = responseData || 5;
   if (err === 5) {
-    console.log("update key");
     alert("Update vk token!");
     return;
   }
@@ -171,7 +163,6 @@ function setTagSelected(e) {
     } else {
       let elem = document.getElementsByClassName("button-active");
       for (let i = elem.length - 1; i > -1; i--) {
-        console.log(elem[i]);
         elem[i].classList = "";
       }
       tags = [];
@@ -201,13 +192,27 @@ function createContent(vkResponse) {
     return Math.random() - 0.5;
   };
 
+
   parsedContent = [];
   parsedContent = parseResponse(vkResponse, tags);
   parsedContent.sort(sRand);
   parsedContentIt = 0;
 
-
   reloadContent();
+
+  
+  if (parsedContent.length == 0) {
+    addMovieBlock(
+      0,
+      "img/nothing.jpg",
+      "",
+      "Фильмов не найдено",
+      "",
+      "Нет фильмов соответствующим тэгам",
+      ""
+    );
+    return;
+  }
 
   for (let i = 0; i < parsedContent.length; i++, parsedContentIt++) {
     if (parsedContentIt === 15) break;
